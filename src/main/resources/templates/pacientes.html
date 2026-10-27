@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Cadastro de Pacientes</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        form { margin-bottom: 20px; }
+        input { margin: 5px; padding: 5px; }
+        table { border-collapse: collapse; width: 50%; }
+        th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+        th { background-color: #f4f4f4; }
+    </style>
+</head>
+<body>
+<h2 th:text="${paciente.id == null} ? 'Novo Paciente' : 'Editar Paciente'">Novo Paciente</h2>
+
+<form th:action="@{/pacientes}" th:object="${paciente}" method="POST">
+    <input type="hidden" th:field="*{id}" />
+    <input type="text" th:field="*{nome}" placeholder="Nome" required />
+    <input type="email" th:field="*{email}" placeholder="E-mail" required />
+    <input type="dataNascimento" th:field="*{dataNascimento}" placeholder="Data de Nascimento" required />
+    <input type="telefone" th:field="*{telefone}" placeholder="Telefone" required />
+    <input type="endereco" th:field="*{endereco}" placeholder="Endereço" required />
+    <div class="dropdown"><button class="dropdown-btn" onclick="toggleDropdown()">Paciente Ativo? <span class="seta">▼</span></button>
+        <div id="dropdown-menu" class="dropdown-content">
+            <a href="#" onclick="definirOpcao(true); event.preventDefault();">Sim</a>
+            <a href="#" onclick="definirOpcao(false); event.preventDefault();">Não</a>
+        </div>
+    </div>
+
+    <button type="submit" th:text="${paciente.id == null} ? 'Salvar' : 'Atualizar'">Salvar</button>
+    <a th:if="${paciente.id != null}" th:href="@{/pacientes}">Cancelar</a>
+</form>
+
+<h2>Pacientes Cadastrados</h2>
+<!-- Tabela que lista os dados salvos no H2 -->
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Nome</th>
+        <th>E-mail</th>
+        <th>Data de Nascimento</th>
+        <th>Telefone</th>
+        <th>Endereço</th>
+        <th>Ativo</th>
+        <th>Ações</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="c : ${pacientes}">
+        <td th:text="${c.id}"></td>
+        <td th:text="${c.nome}"></td>
+        <td th:text="${c.email}"></td>
+        <td th:text="${c.dataNascimento}"></td>
+        <td th:text="${c.telefone}"></td>
+        <td th:text="${c.endereco}"></td>
+        <td th:text="${c.ativo}"></td>
+        <td>
+            <a th:href="@{/pacientes/editar/{id}(id=${c.id})}">Editar</a>
+
+            <form th:action="@{/pacientes/excluir/{id}(id=${c.id})}" method="POST"
+                  style="display:inline; margin:0;"
+                  onsubmit="return confirm('Deseja realmente excluir este paciente?');">
+                <button type="submit">Excluir</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>
