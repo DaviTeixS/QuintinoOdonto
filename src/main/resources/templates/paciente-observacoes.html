@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Observações do paciente', 'ficha')}"></head>
+<body class="app" th:data-base="@{/}">
+
+  <header th:replace="~{fragments/layout :: topoVoltar(${paciente.nome()}, '/pacientes/' + ${paciente.id()}, '')}"></header>
+
+  <main class="conteudo">
+    <th:block th:replace="~{fragments/layout :: mensagens}"></th:block>
+    <h2 class="subtitulo"><th:block th:replace="~{fragments/icones :: livroPequeno}"></th:block>Observações</h2>
+
+    <a class="botao-novo" th:href="@{/pacientes/{id}/observacoes/nova(id=${paciente.id()})}">+Nova observação</a>
+
+    <div class="notas" th:if="${!#lists.isEmpty(observacoes)}">
+      <article class="nota" th:each="o : ${observacoes}">
+        <p class="nota__texto" th:text="${o.texto()}">Texto</p>
+        <p class="nota__info"><span th:text="${o.dataBr()}">00/00/0000</span><span th:if="${!#strings.isEmpty(o.autor())}" th:text="' - ' + ${o.autor()}"> - Autor</span></p>
+      </article>
+    </div>
+    <p class="vazio" th:if="${#lists.isEmpty(observacoes)}">Nenhuma observação registrada.</p>
+  </main>
+
+  <th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>

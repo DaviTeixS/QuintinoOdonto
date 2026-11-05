@@ -1,0 +1,130 @@
+/* =====================================================================
+   TELAS DE DADOS DO PACIENTE: ficha (atalhos), cadastro, consultas,
+   tratamento, saúde e observações
+   ===================================================================== */
+
+/* ---------- Ficha: cinco atalhos ---------- */
+.hub {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 48px 56px;
+  max-width: 980px;
+  margin: 56px auto 0;
+}
+
+.hub__item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  width: 277px;
+  height: 198px;
+  color: #fff;
+  background: linear-gradient(160deg, rgba(139, 176, 222, 0.92), rgba(104, 144, 197, 0.92));
+  border: 1px solid rgba(16, 40, 80, 0.55);
+  border-radius: 20px;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.32);
+  font-family: 'Abhaya Libre', serif;
+  font-size: 44px;
+  font-weight: 700;
+  text-decoration: none;
+  text-shadow: 0 4px 4px rgba(0, 0, 0, 0.3);
+  transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
+}
+.hub__item:hover { transform: translateY(-5px); box-shadow: 0 14px 26px rgba(0, 0, 0, 0.32); filter: brightness(1.06); }
+.hub__item svg { width: 66px; height: 66px; filter: drop-shadow(0 3px 3px rgba(0, 0, 0, 0.25)); }
+
+/* ---------- Cadastro (dados em modo leitura) ---------- */
+.dados { max-width: 720px; margin: 24px auto 0; }
+.dados__linha { padding: 16px 12px 10px; border-bottom: 1px solid #6a7d98; }
+.dados__rotulo { margin: 0; color: var(--cinza-texto); font-size: 18px; }
+.dados__valor { margin: 4px 0 0; color: var(--azul-escuro); font-size: clamp(22px, 2.6vw, 30px); font-weight: 500; overflow-wrap: anywhere; }
+.dados__acoes { display: flex; justify-content: center; margin-top: 40px; }
+
+/* ---------- Histórico de consultas / etapas do tratamento ---------- */
+.registros { display: grid; gap: 22px; margin: 10px auto 0; max-width: 1240px; }
+
+.registro {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  min-height: 100px;
+  padding: 14px 34px;
+  background: linear-gradient(135deg, #a9d0ff, var(--azul-card));
+  border-radius: 20px;
+  box-shadow: var(--sombra-card);
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+.registro:hover { transform: translateY(-2px); box-shadow: var(--sombra-suave); }
+
+.registro__data {
+  flex: none;
+  width: 150px;
+  padding-right: 24px;
+  color: #000;
+  font-family: 'Inter', sans-serif;
+  font-size: 24px;
+  border-right: 1px solid rgba(0, 0, 0, 0.55);
+}
+.registro__textos { flex: 1; min-width: 0; }
+.registro__titulo { margin: 0; color: #000; font-family: 'Inter', sans-serif; font-size: clamp(20px, 2.4vw, 28px); font-weight: 500; }
+.registro__sub { margin: 0; color: var(--cinza-texto); font-family: 'Inter', sans-serif; font-size: 20px; }
+
+/* Etapas do tratamento: bolinha com número do dente + data embaixo do nome */
+.etapa .avatar { width: 58px; height: 58px; font-size: 22px; }
+.etapa .registro__titulo { font-family: var(--fonte-app); font-size: clamp(22px, 2.8vw, 34px); }
+.etapa .registro__sub { font-family: var(--fonte-app); font-size: clamp(20px, 2.4vw, 30px); }
+
+.tratamento-cab {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  max-width: 1240px;
+  margin: 0 auto 34px;
+  padding: 24px 34px;
+  background: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.7);
+  border-radius: 20px;
+  box-shadow: var(--sombra-card);
+}
+.tratamento-cab h2 { margin: 0; color: var(--azul-escuro); font-size: clamp(24px, 3vw, 38px); font-weight: 500; }
+
+/* ---------- Saúde ---------- */
+.caixa {
+  max-width: 1240px;
+  margin: 0 auto 28px;
+  padding: 24px 34px 26px;
+  background: #fff;
+  border: 1px solid #7c8ba2;
+  border-radius: 20px;
+  box-shadow: var(--sombra-card);
+}
+.caixa h2 { margin: 0 0 14px; color: var(--cor-azul); font-size: clamp(22px, 2.6vw, 30px); font-weight: 500; }
+.caixa ul { margin: 0; padding: 0; list-style: none; }
+.caixa li { color: #000; font-size: clamp(20px, 2.3vw, 26px); font-weight: 500; line-height: 1.55; }
+.caixa__vazio { margin: 0; color: var(--cinza-texto); font-size: 22px; }
+
+/* ---------- Observações ---------- */
+.notas { display: grid; gap: 22px; max-width: 1240px; margin: 36px auto 0; }
+.nota {
+  padding: 22px 30px;
+  background: #fff;
+  border: 1px solid #8e7f66;
+  border-radius: 14px;
+  box-shadow: var(--sombra-card);
+}
+.nota__texto { margin: 0; color: var(--cor-azul); font-size: clamp(20px, 2.4vw, 28px); font-weight: 500; line-height: 1.35; overflow-wrap: anywhere; white-space: pre-line; }
+.nota__info { margin: 8px 0 0; color: #6a6a6a; font-size: 18px; }
+
+@media (max-width: 820px) {
+  .hub { gap: 26px; margin-top: 32px; }
+  .hub__item { width: min(277px, 44vw); height: 170px; font-size: 32px; }
+  .hub__item svg { width: 52px; height: 52px; }
+  .registro { flex-wrap: wrap; padding: 16px 20px; gap: 12px 16px; }
+  .registro__data { width: auto; padding-right: 16px; font-size: 20px; }
+  .tratamento-cab, .caixa { padding: 20px; }
+}

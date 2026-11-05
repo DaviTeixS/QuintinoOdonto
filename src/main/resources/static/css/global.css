@@ -1,0 +1,78 @@
+/*VARIAVEIS do site inteiro*/
+:root{
+    --cor-fundo: #fef9ef;
+    --cor-barra: #fbf0db;
+    --cor-azul: #245aa1;
+    --cor-azul-claro: #a0c9fe;
+    --cor-branco: #ffffff;
+    --cor-erro: #b3261e;
+    --fonte-principal: 'Abhaya Libre', serif;
+    --fonte-inter: 'Inter', sans-serif;
+    --fonte-playfair: 'Playfair Display', serif;
+    --raio: 20px;
+    --sombra: 0 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+/* ===== Reset ===== */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  display: flow-root; /* impede a margem da barra do topo de "vazar" e criar rolagem */
+  min-height: 100vh;
+  background: var(--cor-fundo);
+  color: var(--cor-azul);
+  font-family: var(--fonte-principal);
+}
+
+/* ===== Barra do topo (igual em todas as telas) ===== */
+.barraTopo {
+  margin-top: 36px;
+  padding: 4px 0;
+  background: var(--cor-barra);
+  text-align: center;
+}
+
+.barraTopo-Titulo {
+  font-size: 48px;
+  font-weight: 400;
+  line-height: 1.1;
+  text-shadow: var(--sombra);
+}
+
+/* ===== Botão azul ===== */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 32px;
+  background: var(--cor-azul);
+  color: var(--cor-branco);
+  border: none;
+  border-radius: var(--raio);
+  font-family: var(--fonte-principal);
+  font-size: 36px;
+  font-weight: 700;
+  line-height: 1;
+  text-shadow: var(--sombra);
+  cursor: pointer;
+  transition: transform 0.15s ease, filter 0.15s ease, box-shadow 0.15s ease;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.12);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.22);
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}

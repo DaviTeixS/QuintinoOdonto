@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head(${tituloPagina}, null)}"></head>
+<body class="app" th:data-base="@{/}">
+
+  <header th:replace="~{fragments/layout :: topoVoltar(${tituloPagina}, ${voltar}, '')}"></header>
+
+  <main class="conteudo">
+    <th:block th:replace="~{fragments/layout :: mensagens}"></th:block>
+
+    <form class="form" th:action="@{${acao}}" method="post" data-envio-unico>
+      <div class="campo">
+        <label for="nome">Nome</label>
+        <input id="nome" name="nome" type="text" required minlength="3" maxlength="100" th:value="${v['nome']}">
+      </div>
+      <div class="campo">
+        <label for="sexo">Sexo</label>
+        <select id="sexo" name="sexo" required>
+          <option value="" disabled th:selected="${v['sexo'] == null or v['sexo'] == ''}">Selecione</option>
+          <option value="Feminino" th:selected="${v['sexo'] == 'Feminino'}">Feminino</option>
+          <option value="Masculino" th:selected="${v['sexo'] == 'Masculino'}">Masculino</option>
+          <option value="Outro" th:selected="${v['sexo'] == 'Outro'}">Outro</option>
+        </select>
+      </div>
+
+      <div class="campo">
+        <label for="nascimento">Nascimento</label>
+        <input id="nascimento" name="nascimento" type="date" required th:max="${hoje}" th:value="${v['nascimento']}">
+      </div>
+      <div class="campo">
+        <label for="celular">Celular</label>
+        <input id="celular" name="celular" type="tel" required inputmode="numeric" data-mascara="telefone"
+               placeholder="11 90000-0000" th:value="${v['celular']}">
+      </div>
+
+      <div class="campo">
+        <label for="rg">RG</label>
+        <input id="rg" name="rg" type="text" maxlength="20" th:value="${v['rg']}">
+      </div>
+      <div class="campo">
+        <label for="cpf">CPF</label>
+        <input id="cpf" name="cpf" type="text" required inputmode="numeric" data-mascara="cpf"
+               placeholder="000.000.000-00" th:value="${v['cpf']}">
+      </div>
+
+      <div class="form-acoes">
+        <button type="submit" class="botao botao--primario">Salvar</button>
+        <a class="botao botao--secundario" th:href="@{${voltar}}">Cancelar</a>
+      </div>
+    </form>
+  </main>
+
+  <th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>

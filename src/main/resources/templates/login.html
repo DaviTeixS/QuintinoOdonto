@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login | Quintino Odonto</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Abhaya+Libre:wght@400;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" th:href="@{/css/global.css}">
+  <link rel="stylesheet" th:href="@{/css/login.css}">
+</head>
+<body class="pagina-login">
+
+  <header class="barraTopo">
+    <h1 class="barraTopo-Titulo">Quintino Odonto</h1>
+  </header>
+
+  <a class="link-cadastro" th:href="@{/cadastro}">Fazer cadastro</a>
+
+  <main class="login">
+    <h2 class="login-titulo">Seja bem-vindo a Quintino Odonto</h2>
+
+    <form class="login-form" th:action="@{/login}" method="post">
+      <label for="email">Email</label>
+      <input type="email" id="email" name="email" th:value="${email}" autocomplete="username" required>
+
+      <label for="senha">Senha</label>
+      <input type="password" id="senha" name="senha" autocomplete="current-password" required>
+
+      <p class="login-sucesso" role="status" th:if="${sucesso != null}" th:text="${sucesso}"></p>
+      <p class="login-erro" role="alert" th:if="${erro != null}" th:text="${erro}"></p>
+
+      <button type="submit" class="btn">Confirmar</button>
+    </form>
+  </main>
+
+</body>
+</html>

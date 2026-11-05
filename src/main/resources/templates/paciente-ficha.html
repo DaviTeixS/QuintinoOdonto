@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head(${paciente.nome()}, 'ficha')}"></head>
+<body class="app" th:data-base="@{/}">
+
+  <header th:replace="~{fragments/layout :: topoVoltar(${paciente.nome()}, '/pacientes', 'ficha')}"></header>
+
+  <main class="conteudo">
+    <th:block th:replace="~{fragments/layout :: mensagens}"></th:block>
+
+    <nav class="hub" aria-label="Ficha do paciente">
+      <a class="hub__item" th:href="@{/pacientes/{id}/cadastro(id=${paciente.id()})}">
+        <th:block th:replace="~{fragments/icones :: conta}"></th:block>Cadastro
+      </a>
+      <a class="hub__item" th:href="@{/pacientes/{id}/consultas(id=${paciente.id()})}">
+        <th:block th:replace="~{fragments/icones :: livro}"></th:block>Consultas
+      </a>
+      <a class="hub__item" th:href="@{/pacientes/{id}/tratamento(id=${paciente.id()})}">
+        <th:block th:replace="~{fragments/icones :: remedio}"></th:block>Tratamento
+      </a>
+      <a class="hub__item" th:href="@{/pacientes/{id}/saude(id=${paciente.id()})}">
+        <th:block th:replace="~{fragments/icones :: coracao}"></th:block>Saúde
+      </a>
+      <a class="hub__item" th:href="@{/pacientes/{id}/observacoes(id=${paciente.id()})}">
+        Observações
+      </a>
+    </nav>
+  </main>
+
+  <th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>

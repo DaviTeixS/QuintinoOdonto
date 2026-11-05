@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head(${tituloPagina}, null)}"></head>
+<body class="app" th:data-base="@{/}">
+
+  <header th:replace="~{fragments/layout :: topoVoltar(${tituloPagina}, '/procedimentos', '')}"></header>
+
+  <main class="conteudo conteudo--estreito">
+    <th:block th:replace="~{fragments/layout :: mensagens}"></th:block>
+
+    <form class="form form--coluna" th:action="@{${acao}}" method="post" data-envio-unico novalidate="novalidate">
+      <div class="campo">
+        <label for="nome">Nome do procedimento</label>
+        <input id="nome" name="nome" type="text" maxlength="80" required placeholder="Ex.: Limpeza"
+               th:value="${v['nome']}">
+      </div>
+
+      <div class="campo">
+        <label for="duracao">Duração estimada</label>
+        <select id="duracao" name="duracao" required>
+          <option th:each="d : ${duracoes}" th:value="${d}" th:text="${@fmt.duracaoLonga(d)}"
+                  th:selected="${v['duracao'] == d.toString()}">30 minutos</option>
+        </select>
+      </div>
+
+      <div class="campo">
+        <label id="dentistasRotulo">Dentistas responsáveis</label>
+        <!-- Opções carregadas de /api/dentistas por /js/procedimento-form.js -->
+        <div class="multi" id="dentistas" th:data-api="@{/api/dentistas}"
+             data-placeholder="Selecione as dentistas"
+             th:data-selecionados="${v['selecionados']}">
+          <button type="button" class="multi__botao" aria-haspopup="true" aria-expanded="false"
+                  aria-labelledby="dentistasRotulo" data-vazio="true">
+            <span class="multi__texto">Selecione as dentistas</span>
+            <th:block th:replace="~{fragments/icones :: seta}"></th:block>
+          </button>
+          <div class="multi__painel"><p class="vazio">Carregando...</p></div>
+          <div class="multi__saida"></div>
+        </div>
+      </div>
+
+      <div class="campo">
+        <label for="descricao">Descrição</label>
+        <input id="descricao" name="descricao" type="text" maxlength="200" placeholder="Descreva o procedimento"
+               th:value="${v['descricao']}">
+      </div>
+
+      <div class="form-acoes">
+        <button type="submit" class="botao botao--primario">Salvar</button>
+        <a class="botao botao--secundario" th:href="@{/procedimentos}">Cancelar</a>
+      </div>
+    </form>
+  </main>
+
+  <th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+  <script th:src="@{/js/procedimento-form.js}" defer></script>
+</body>
+</html>

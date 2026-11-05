@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Saúde do paciente', 'ficha')}"></head>
+<body class="app" th:data-base="@{/}">
+
+  <header th:replace="~{fragments/layout :: topoVoltar(${paciente.nome()}, '/pacientes/' + ${paciente.id()}, '')}"></header>
+
+  <main class="conteudo">
+    <th:block th:replace="~{fragments/layout :: mensagens}"></th:block>
+    <h2 class="subtitulo"><th:block th:replace="~{fragments/icones :: livroPequeno}"></th:block>Saúde</h2>
+
+    <section class="caixa">
+      <h2>Problemas de saúde</h2>
+      <ul th:if="${!#lists.isEmpty(saude.problemas())}"><li th:each="p : ${saude.problemas()}" th:text="${p}">Item</li></ul>
+      <p class="caixa__vazio" th:if="${#lists.isEmpty(saude.problemas())}">Nenhum problema de saúde informado.</p>
+    </section>
+
+    <section class="caixa">
+      <h2>Sintomas informados</h2>
+      <ul th:if="${!#lists.isEmpty(saude.sintomas())}"><li th:each="s : ${saude.sintomas()}" th:text="${s}">Item</li></ul>
+      <p class="caixa__vazio" th:if="${#lists.isEmpty(saude.sintomas())}">Nenhum sintoma informado.</p>
+    </section>
+
+    <div class="centro">
+      <a class="botao botao--primario" th:href="@{/pacientes/{id}/saude/editar(id=${paciente.id()})}">Editar informações</a>
+    </div>
+  </main>
+
+  <th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>

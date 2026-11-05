@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+
+<!--
+  FRAGMENTOS COMPARTILHADOS (usados por todas as telas)
+
+  head(titulo, css)               -> <head> padrão. css = nome do arquivo extra em /css (ou null)
+  topo(titulo)                    -> barra do topo + menu lateral (telas principais)
+  topoVoltar(titulo, voltar, tipo)-> barra com seta de voltar. tipo: '' (padrão) ou 'ficha' (azul)
+  mensagens                       -> avisos de sucesso / erro (variáveis "sucesso" e "erros")
+  scripts                         -> JavaScript global (menu, máscaras)
+-->
+
+<head th:fragment="head(titulo, css)">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title th:text="${titulo} + ' | Quintino Odonto'">Quintino Odonto</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Abhaya+Libre:wght@400;700&family=Inter:wght@400;500;700&family=Playfair+Display:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" th:href="@{/css/global.css}">
+  <link rel="stylesheet" th:href="@{/css/componentes.css}">
+  <link rel="stylesheet" th:if="${css != null}" th:href="@{'/css/' + ${css} + '.css'}">
+</head>
+
+<body>
+
+<!-- Barra do topo + menu lateral (hambúrguer). Telas principais: início, pacientes, colaboradores, procedimentos. -->
+<th:block th:fragment="topo(titulo)">
+  <header class="topo">
+    <button type="button" class="icone-btn" id="menuBtn" aria-label="Abrir menu"
+            aria-controls="menuLateral" aria-expanded="false">
+      <th:block th:replace="~{fragments/icones :: menu}"></th:block>
+    </button>
+    <h1 class="topo__titulo" th:text="${titulo}">Quintino Odonto</h1>
+    <span></span>
+  </header>
+
+  <div class="menu-overlay" id="menuOverlay"></div>
+  <nav class="menu-lateral" id="menuLateral" aria-label="Menu principal">
+    <button type="button" class="icone-btn menu-lateral__fechar" id="menuFechar" aria-label="Fechar menu">
+      <th:block th:replace="~{fragments/icones :: voltar}"></th:block>
+    </button>
+    <ul class="menu-lateral__lista">
+      <li><a th:href="@{/pacientes}" data-rota="/pacientes">Pacientes</a></li>
+      <li th:if="${usuario != null and usuario.consultorio}"><a th:href="@{/colaboradores}" data-rota="/colaboradores">Colaborador</a></li>
+      <li><a th:href="@{/inicio}" data-rota="/inicio">Agendas</a></li>
+      <li><a th:href="@{/pacientes}">Fichas</a></li>
+      <li th:if="${usuario != null and usuario.consultorio}"><a th:href="@{/procedimentos}" data-rota="/procedimentos">Procedimentos</a></li>
+    </ul>
+    <form class="menu-lateral__sair" th:action="@{/logout}" method="post">
+      <p class="menu-lateral__usuario" th:if="${usuario != null}" th:text="${usuario.nome}">Usuário</p>
+      <button type="submit" class="botao-sair">Sair</button>
+    </form>
+  </nav>
+</th:block>
+
+<!-- Barra com seta de voltar (telas de formulário e de ficha). -->
+<header th:fragment="topoVoltar(titulo, voltar, tipo)" class="topo topo--detalhe"
+        th:classappend="${tipo == 'ficha'} ? 'topo--ficha'">
+  <a class="icone-btn" th:href="@{${voltar}}" aria-label="Voltar">
+    <th:block th:replace="~{fragments/icones :: voltar}"></th:block>
+  </a>
+  <h1 class="topo__titulo" th:text="${titulo}">Título</h1>
+  <span></span>
+</header>
+
+<!-- Avisos -->
+<th:block th:fragment="mensagens">
+  <div class="alerta alerta--sucesso" role="status" th:if="${sucesso != null}" th:text="${sucesso}"></div>
+  <div class="alerta alerta--erro" role="alert" th:if="${erros != null and !#lists.isEmpty(erros)}">
+    <ul><li th:each="e : ${erros}" th:text="${e}"></li></ul>
+  </div>
+</th:block>
+
+<th:block th:fragment="scripts">
+  <script th:src="@{/js/layout.js}" defer></script>
+</th:block>
+
+</body>
+</html>

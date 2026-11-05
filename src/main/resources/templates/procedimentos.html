@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Procedimentos', null)}"></head>
+<body class="app" th:data-base="@{/}">
+
+  <th:block th:replace="~{fragments/layout :: topo('Quintino Odonto')}"></th:block>
+
+  <main class="conteudo conteudo--estreito">
+    <th:block th:replace="~{fragments/layout :: mensagens}"></th:block>
+
+    <form class="busca" role="search" onsubmit="return false">
+      <label class="visualmente-oculto" for="busca">Buscar procedimento pelo nome</label>
+      <div class="busca__campo">
+        <th:block th:replace="~{fragments/icones :: lupa}"></th:block>
+        <input id="busca" type="search" placeholder="Informe o nome do procedimento" autocomplete="off">
+      </div>
+    </form>
+
+    <section id="lista" class="lista" aria-live="polite"
+             th:data-api="@{/api/procedimentos}" th:data-base="@{/procedimentos}"
+             data-principal="false" data-vazio="Nenhum procedimento encontrado."></section>
+
+    <a class="botao-novo" th:href="@{/procedimentos/novo}">+Novo Procedimento</a>
+  </main>
+
+  <th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+  <script th:src="@{/js/busca-lista.js}" defer></script>
+</body>
+</html>

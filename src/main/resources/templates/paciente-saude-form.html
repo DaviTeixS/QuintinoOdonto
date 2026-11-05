@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Editar saúde', null)}"></head>
+<body class="app" th:data-base="@{/}">
+
+  <header th:replace="~{fragments/layout :: topoVoltar(${paciente.nome()}, '/pacientes/' + ${paciente.id()} + '/saude', '')}"></header>
+
+  <main class="conteudo conteudo--estreito">
+    <h2 class="subtitulo"><th:block th:replace="~{fragments/icones :: livroPequeno}"></th:block>Editar saúde</h2>
+
+    <form class="form form--coluna" th:action="@{/pacientes/{id}/saude(id=${paciente.id()})}" method="post" data-envio-unico>
+      <div class="campo">
+        <label for="problemas">Problemas de saúde</label>
+        <textarea id="problemas" name="problemas" maxlength="1000" placeholder="Um item por linha" th:text="${problemas}"></textarea>
+        <p class="campo__dica">Escreva um item por linha (ex.: Hipertensão).</p>
+      </div>
+      <div class="campo">
+        <label for="sintomas">Sintomas informados</label>
+        <textarea id="sintomas" name="sintomas" maxlength="1000" placeholder="Um item por linha" th:text="${sintomas}"></textarea>
+      </div>
+      <div class="form-acoes">
+        <button type="submit" class="botao botao--primario">Salvar</button>
+        <a class="botao botao--secundario" th:href="@{/pacientes/{id}/saude(id=${paciente.id()})}">Cancelar</a>
+      </div>
+    </form>
+  </main>
+
+  <th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>

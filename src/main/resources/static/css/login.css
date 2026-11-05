@@ -1,0 +1,125 @@
+/* ===== Fundo desfocado só no login (manchas de cor, sem imagem) ===== */
+.pagina-login {
+  background:
+    radial-gradient(circle at 78% 18%, #5b5878 0%, transparent 48%),
+    radial-gradient(circle at 62% 58%, #b8c6dd 0%, transparent 52%),
+    radial-gradient(circle at 20% 85%, #6c6f80 0%, transparent 50%),
+    #5f86bd;
+  background-attachment: fixed;
+  .barraTopo{
+    background: rgba(122, 122, 197, 0.726);;
+  }
+  .barraTopo-Titulo{
+    color: var(--cor-branco);
+  }
+}
+
+/* ===== Link do canto superior direito (fora do main) ===== */
+.link-cadastro {
+  display: block;
+  padding: 16px 24px;
+  color: var(--cor-branco);
+  font-size: 24px;
+  text-align: right;
+  text-decoration: none;
+  text-shadow: var(--sombra);
+}
+
+.link-cadastro:hover {
+  text-decoration: underline;
+}
+
+/* ===== Conteúdo (dentro do main) ===== */
+.login {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 40px;
+  padding: 0 16px 64px;
+}
+
+.login-titulo {
+  margin-bottom: 48px;
+  color: var(--cor-branco);
+  font-size: 36px;
+  text-align: center;
+  text-shadow: var(--sombra);
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  width: min(355px, 100%);
+}
+
+.login-form label {
+  margin-bottom: 8px;
+  color: var(--cor-branco);
+  font-size: 36px;
+  font-weight: 700;
+  text-align: center;
+  text-shadow: var(--sombra);
+}
+
+.login-form input {
+  width: 100%;
+  height: 44px;
+  margin-bottom: 24px;
+  padding: 0 16px;
+  background: rgba(255, 255, 255, 0.88);
+  color: var(--cor-azul);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: var(--raio);
+  font-family: var(--fonte-principal);
+  font-size: 20px;
+  transition: box-shadow 0.15s ease;
+}
+
+.login-form input:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.55);
+}
+
+.login-erro {
+  margin-bottom: 16px;
+  padding: 8px 12px;
+  background: var(--cor-erro);
+  color: var(--cor-branco);
+  border-radius: 12px;
+  font-size: 18px;
+  text-align: center;
+}
+
+.login-form .btn {
+  align-self: center;
+  width: 190px;
+  height: 44px;
+  margin-top: 8px;
+  padding: 0;
+}
+
+.barraTopo {
+  margin-top: 36px;
+  padding: 4px 0;
+  background: rgba(107, 107, 206, 0.13);
+  text-align: center;
+ 
+}
+
+.barraTopo-Titulo {
+  font-size: 48px;
+  font-weight: 400;
+  line-height: 1.1;
+  text-shadow: var(--sombra);
+  color: white;
+}
+
+.login-sucesso {
+  margin-bottom: 16px;
+  padding: 8px 12px;
+  background: #3f8f3a;
+  color: var(--cor-branco);
+  border-radius: 12px;
+  font-size: 18px;
+  text-align: center;
+}

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Nova observação', null)}"></head>
+<body class="app" th:data-base="@{/}">
+
+  <header th:replace="~{fragments/layout :: topoVoltar(${paciente.nome()}, '/pacientes/' + ${paciente.id()} + '/observacoes', '')}"></header>
+
+  <main class="conteudo">
+    <th:block th:replace="~{fragments/layout :: mensagens}"></th:block>
+    <h2 class="subtitulo"><th:block th:replace="~{fragments/icones :: livroPequeno}"></th:block>Nova observação</h2>
+
+    <form class="form form--coluna" style="max-width:1240px"
+          th:action="@{/pacientes/{id}/observacoes(id=${paciente.id()})}" method="post" data-envio-unico>
+      <div class="campo campo--texto-grande">
+        <label class="visualmente-oculto" for="texto">Observação</label>
+        <textarea id="texto" name="texto" required maxlength="1000" placeholder="Escreva a observação sobre o paciente"
+                  th:text="${texto}"></textarea>
+      </div>
+      <div class="form-acoes" style="grid-template-columns:repeat(2,minmax(0,1fr))">
+        <button type="submit" class="botao botao--primario">Salvar</button>
+        <a class="botao botao--secundario" th:href="@{/pacientes/{id}/observacoes(id=${paciente.id()})}">Cancelar</a>
+      </div>
+    </form>
+  </main>
+
+  <th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>

@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head(${tituloPagina}, null)}"></head>
+<body class="app" th:data-base="@{/}">
+  <header th:replace="~{fragments/layout :: topoVoltar(${tituloPagina}, ${voltar}, '')}"></header>
+  <main class="conteudo conteudo--estreito">
+    <p class="vazio">Esta tela faz parte do módulo de Agendamentos e será conectada pela outra parte do trabalho.</p>
+    <div class="centro"><a class="botao botao--primario" th:href="@{${voltar}}">Voltar</a></div>
+  </main>
+  <th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>

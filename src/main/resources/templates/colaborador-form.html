@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Editar colaborador', null)}"></head>
+<body class="app" th:data-base="@{/}">
+
+  <header th:replace="~{fragments/layout :: topoVoltar('Editar colaborador', '/colaboradores', '')}"></header>
+
+  <main class="conteudo">
+    <th:block th:replace="~{fragments/layout :: mensagens}"></th:block>
+
+    <form class="form" th:action="@{${acao}}" method="post" data-envio-unico>
+      <div class="campo">
+        <label for="nome">Nome</label>
+        <input id="nome" name="nome" type="text" required minlength="3" maxlength="100" th:value="${v['nome']}">
+      </div>
+      <div class="campo">
+        <label for="funcao">Função</label>
+        <select id="funcao" name="funcao" required>
+          <option value="DENTISTA" th:selected="${v['funcao'] == 'DENTISTA'}">Dentista</option>
+          <option value="RECEPCIONISTA" th:selected="${v['funcao'] == 'RECEPCIONISTA'}">Recepcionista</option>
+        </select>
+      </div>
+
+      <div class="campo">
+        <label for="email">E-mail</label>
+        <input id="email" name="email" type="email" required maxlength="120" placeholder="nome@email.com" th:value="${v['email']}">
+      </div>
+      <div class="campo">
+        <label for="celular">Celular</label>
+        <input id="celular" name="celular" type="tel" required inputmode="numeric" data-mascara="telefone"
+               placeholder="11 90000-0000" th:value="${v['celular']}">
+      </div>
+
+      <div class="campo">
+        <label for="cpf">CPF</label>
+        <input id="cpf" name="cpf" type="text" required inputmode="numeric" data-mascara="cpf"
+               placeholder="000.000.000-00" th:value="${v['cpf']}">
+      </div>
+      <div class="campo">
+        <label for="cro">Registro profissional (CRO)</label>
+        <input id="cro" name="cro" type="text" maxlength="30" placeholder="CRO-SP 00000" th:value="${v['cro']}">
+      </div>
+
+      <div class="form-acoes">
+        <button type="submit" class="botao botao--primario">Salvar</button>
+        <a class="botao botao--secundario" th:href="@{/colaboradores}">Cancelar</a>
+      </div>
+
+      <a class="link-sublinhado" th:href="@{/colaboradores/{id}/horarios(id=${colaboradorId})}">Gerenciar horários de atendimento</a>
+    </form>
+  </main>
+
+  <th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>

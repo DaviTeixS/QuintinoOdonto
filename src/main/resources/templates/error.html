@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Página não encontrada', null)}"></head>
+<body class="app" th:data-base="@{/}">
+  <header class="topo topo--detalhe">
+    <span></span>
+    <h1 class="topo__titulo">Quintino Odonto</h1>
+    <span></span>
+  </header>
+  <main class="conteudo conteudo--estreito">
+    <p class="vazio" th:if="${status == 404}">Não encontramos o que você procurava.</p>
+    <p class="vazio" th:unless="${status == 404}">Algo deu errado. Tente novamente em instantes.</p>
+    <div class="centro"><a class="botao botao--primario" th:href="@{/inicio}">Ir para o início</a></div>
+  </main>
+</body>
+</html>

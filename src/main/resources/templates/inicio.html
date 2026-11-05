@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Início', 'inicio')}"></head>
+<body class="app" th:data-base="@{/}">
+
+  <th:block th:replace="~{fragments/layout :: topo('Quintino Odonto')}"></th:block>
+
+  <main class="conteudo conteudo--inicio">
+    <th:block th:replace="~{fragments/layout :: mensagens}"></th:block>
+
+    <!-- Calendário: montado por /js/calendario.js com dados de /api/agenda -->
+    <section id="calendario" class="calendario" aria-label="Calendário de consultas"
+             th:data-api-mes="@{/api/agenda/mes}" th:data-api-dia="@{/api/agenda/dia}"
+             th:data-ficha-base="@{/pacientes}">
+      <div class="calendario__cab">
+        <button type="button" class="icone-btn" id="calAnterior" aria-label="Mês anterior">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 5-7 7 7 7"/></svg>
+        </button>
+        <h2 class="calendario__titulo" id="calTitulo" aria-live="polite">&nbsp;</h2>
+        <button type="button" class="icone-btn" id="calProximo" aria-label="Próximo mês">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg>
+        </button>
+      </div>
+      <div class="calendario__semana" aria-hidden="true">
+        <span>dom</span><span>seg</span><span>ter</span><span>qua</span><span>qui</span><span>sex</span><span>sab</span>
+      </div>
+      <div class="calendario__grade" id="calGrade"></div>
+    </section>
+
+    <section class="agenda-dia" aria-live="polite">
+      <h2 class="agenda-dia__titulo" id="diaTitulo"></h2>
+      <div class="consultas-dia" id="diaLista"></div>
+      <div class="centro">
+        <button type="button" class="botao botao--suave" id="verTodos" hidden>Visualizar todos</button>
+      </div>
+    </section>
+  </main>
+
+  <th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+  <script th:src="@{/js/calendario.js}" defer></script>
+</body>
+</html>

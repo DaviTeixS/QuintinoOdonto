@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Consultas do paciente', 'ficha')}"></head>
+<body class="app" th:data-base="@{/}">
+
+  <header th:replace="~{fragments/layout :: topoVoltar(${paciente.nome()}, '/pacientes/' + ${paciente.id()}, '')}"></header>
+
+  <main class="conteudo">
+    <h2 class="subtitulo"><th:block th:replace="~{fragments/icones :: livroPequeno}"></th:block>Histórico de consultas</h2>
+
+    <div class="registros" th:if="${!#lists.isEmpty(consultas)}">
+      <article class="registro" th:each="c : ${consultas}">
+        <div class="registro__data" th:text="${c.dataBr()}">00/00/0000</div>
+        <div class="registro__textos">
+          <p class="registro__titulo" th:text="${c.procedimento()}">Procedimento</p>
+          <p class="registro__sub" th:text="${c.dentistaNome()}">Dentista</p>
+        </div>
+        <span class="selo" th:classappend="'selo--' + ${@fmt.statusClasse(c.status())}" th:text="${@fmt.status(c.status())}">Realizada</span>
+      </article>
+    </div>
+    <p class="vazio" th:if="${#lists.isEmpty(consultas)}">Este paciente ainda não tem consultas.</p>
+  </main>
+
+  <th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Cadastro do paciente', 'ficha')}"></head>
+<body class="app" th:data-base="@{/}">
+
+  <header th:replace="~{fragments/layout :: topoVoltar(${paciente.nome()}, '/pacientes/' + ${paciente.id()}, 'ficha')}"></header>
+
+  <main class="conteudo conteudo--estreito">
+    <th:block th:replace="~{fragments/layout :: mensagens}"></th:block>
+
+    <dl class="dados">
+      <div class="dados__linha"><dt class="dados__rotulo">Nome</dt><dd class="dados__valor" th:text="${paciente.nome()}">Nome</dd></div>
+      <div class="dados__linha"><dt class="dados__rotulo">Sexo</dt><dd class="dados__valor" th:text="${paciente.sexo()}">Feminino</dd></div>
+      <div class="dados__linha"><dt class="dados__rotulo">Nascimento</dt><dd class="dados__valor" th:text="${paciente.nascimentoBr()}">00/00/0000</dd></div>
+      <div class="dados__linha"><dt class="dados__rotulo">Celular</dt><dd class="dados__valor" th:text="${paciente.celular()}">11 00000-0000</dd></div>
+      <div class="dados__linha"><dt class="dados__rotulo">Rg</dt><dd class="dados__valor" th:text="${#strings.isEmpty(paciente.rg()) ? '—' : paciente.rg()}">0</dd></div>
+      <div class="dados__linha"><dt class="dados__rotulo">Cpf</dt><dd class="dados__valor" th:text="${paciente.cpf()}">000.000.000-00</dd></div>
+    </dl>
+
+    <div class="dados__acoes">
+      <a class="botao botao--primario" th:href="@{/pacientes/{id}/editar(id=${paciente.id()})}">Editar dados</a>
+    </div>
+  </main>
+
+  <th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>

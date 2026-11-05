@@ -1,74 +1,30 @@
 <!DOCTYPE html>
-<html xmlns:th="http://thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Cadastro de Pacientes</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 40px; }
-        form { margin-bottom: 20px; }
-        input { margin: 5px; padding: 5px; }
-        table { border-collapse: collapse; width: 50%; }
-        th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
-        th { background-color: #f4f4f4; }
-    </style>
-</head>
-<body>
-<h2 th:text="${paciente.id == null} ? 'Novo Paciente' : 'Editar Paciente'">Novo Paciente</h2>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Pacientes', null)}"></head>
+<body class="app" th:data-base="@{/}">
 
-<form th:action="@{/pacientes}" th:object="${paciente}" method="POST">
-    <input type="hidden" th:field="*{id}" />
-    <input type="text" th:field="*{nome}" placeholder="Nome" required />
-    <input type="email" th:field="*{email}" placeholder="E-mail" required />
-    <input type="dataNascimento" th:field="*{dataNascimento}" placeholder="Data de Nascimento" required />
-    <input type="telefone" th:field="*{telefone}" placeholder="Telefone" required />
-    <input type="endereco" th:field="*{endereco}" placeholder="Endereço" required />
-    <div class="dropdown"><button class="dropdown-btn" onclick="toggleDropdown()">Paciente Ativo? <span class="seta">▼</span></button>
-        <div id="dropdown-menu" class="dropdown-content">
-            <a href="#" onclick="definirOpcao(true); event.preventDefault();">Sim</a>
-            <a href="#" onclick="definirOpcao(false); event.preventDefault();">Não</a>
-        </div>
-    </div>
+  <th:block th:replace="~{fragments/layout :: topo('Quintino Odonto')}"></th:block>
 
-    <button type="submit" th:text="${paciente.id == null} ? 'Salvar' : 'Atualizar'">Salvar</button>
-    <a th:if="${paciente.id != null}" th:href="@{/pacientes}">Cancelar</a>
-</form>
+  <main class="conteudo conteudo--estreito">
+    <th:block th:replace="~{fragments/layout :: mensagens}"></th:block>
 
-<h2>Pacientes Cadastrados</h2>
-<!-- Tabela que lista os dados salvos no H2 -->
-<table>
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>Nome</th>
-        <th>E-mail</th>
-        <th>Data de Nascimento</th>
-        <th>Telefone</th>
-        <th>Endereço</th>
-        <th>Ativo</th>
-        <th>Ações</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="c : ${pacientes}">
-        <td th:text="${c.id}"></td>
-        <td th:text="${c.nome}"></td>
-        <td th:text="${c.email}"></td>
-        <td th:text="${c.dataNascimento}"></td>
-        <td th:text="${c.telefone}"></td>
-        <td th:text="${c.endereco}"></td>
-        <td th:text="${c.ativo}"></td>
-        <td>
-            <a th:href="@{/pacientes/editar/{id}(id=${c.id})}">Editar</a>
+    <form class="busca" role="search" onsubmit="return false">
+      <label class="visualmente-oculto" for="busca">Buscar paciente pelo nome</label>
+      <div class="busca__campo">
+        <th:block th:replace="~{fragments/icones :: lupa}"></th:block>
+        <input id="busca" type="search" placeholder="Informe o nome do paciente" autocomplete="off">
+      </div>
+    </form>
 
-            <form th:action="@{/pacientes/excluir/{id}(id=${c.id})}" method="POST"
-                  style="display:inline; margin:0;"
-                  onsubmit="return confirm('Deseja realmente excluir este paciente?');">
-                <button type="submit">Excluir</button>
-            </form>
-        </td>
-    </tr>
-    </tbody>
-</table>
+    <!-- Itens montados por /js/busca-lista.js a partir de /api/pacientes -->
+    <section id="lista" class="lista" aria-live="polite"
+             th:data-api="@{/api/pacientes}" th:data-base="@{/pacientes}"
+             data-principal="true" data-vazio="Nenhum paciente encontrado."></section>
 
+    <a class="botao-novo" th:href="@{/pacientes/novo}">+Novo Paciente</a>
+  </main>
+
+  <th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+  <script th:src="@{/js/busca-lista.js}" defer></script>
 </body>
 </html>

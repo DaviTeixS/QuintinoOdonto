@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Tratamento do paciente', 'ficha')}"></head>
+<body class="app" th:data-base="@{/}">
+
+  <header th:replace="~{fragments/layout :: topoVoltar(${paciente.nome()}, '/pacientes/' + ${paciente.id()}, '')}"></header>
+
+  <main class="conteudo">
+    <h2 class="subtitulo"><th:block th:replace="~{fragments/icones :: livroPequeno}"></th:block>Tratamento atual</h2>
+
+    <th:block th:if="${tratamento != null}">
+      <div class="tratamento-cab">
+        <h2 th:text="${tratamento.titulo()}">Restauração do dente 26</h2>
+        <span class="selo" th:classappend="'selo--' + ${@fmt.statusClasse(tratamento.status())}" th:text="${@fmt.status(tratamento.status())}">Em andamento</span>
+      </div>
+
+      <div class="registros">
+        <article class="registro etapa" th:each="e : ${tratamento.etapas()}">
+          <span class="avatar" th:text="${e.dente() != null ? e.dente() : '–'}">26</span>
+          <div class="registro__textos">
+            <p class="registro__titulo" th:text="${e.procedimento()}">Avaliação</p>
+            <p class="registro__sub" th:text="${e.dataBr()}">00/00/0000</p>
+          </div>
+          <span class="selo" th:classappend="'selo--' + ${@fmt.statusClasse(e.status())}" th:text="${@fmt.status(e.status())}">Realizada</span>
+        </article>
+      </div>
+    </th:block>
+
+    <p class="vazio" th:if="${tratamento == null}">Nenhum tratamento em andamento para este paciente.</p>
+  </main>
+
+  <th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>
