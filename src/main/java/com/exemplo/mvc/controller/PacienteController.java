@@ -1,5 +1,5 @@
 package com.exemplo.mvc.controller;
-import com.exemplo.mvc.model.Paciente;
+import com.exemplo.mvc.model.Observacao;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,20 +19,20 @@ import com.exemplo.mvc.repository.PacienteRepository;
     @GetMapping("/pacientes")
     public String listarPacientes(Model model) {
         model.addAttribute("pacientes", pacienteRepository.findAll());
-        model.addAttribute("paciente", new Paciente()); // Objeto vazio para o formulário
+        model.addAttribute("paciente", new Observacao.Paciente()); // Objeto vazio para o formulário
         return "pacientes"; // Procura por paciente.html na pasta templates
     }
 
     // Salvar novo paciente no Banco de Dados
     @PostMapping("/pacientes")
-    public String salvarPaciente(Paciente paciente) {
+    public String salvarPaciente(Observacao.Paciente paciente) {
         pacienteRepository.save(paciente);
         return "redirect:/pacientes"; // Atualiza a página
     }
     // Carrega um paciente no formulário para edição
     @GetMapping("/pacientes/editar/{id}")
     public String editarPaciente(@PathVariable Long id, Model model) {
-        Paciente paciente = pacienteRepository.findById(id)
+        Observacao.Paciente paciente = pacienteRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Paciente inválido: " + id));
 
         model.addAttribute("pacientes", pacienteRepository.findAll()); // a tabela continua aparecendo
