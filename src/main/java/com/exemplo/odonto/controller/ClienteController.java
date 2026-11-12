@@ -1,4 +1,4 @@
-package br.com.quintino.mvc.controller;
+package com.exemplo.odonto.controller;
 
 public class ClienteController {
     

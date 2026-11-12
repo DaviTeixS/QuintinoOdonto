@@ -1,2 +1,7 @@
 package br.com.quintino.odonto.model;
-public enum Perfil { CONSULTORIO, DENTISTA }
+
+public enum Perfil {
+    ADMINISTRATIVO,
+    DENTISTA,
+    RECEPCAO
+}

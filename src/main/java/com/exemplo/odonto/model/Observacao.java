@@ -1,4 +1,4 @@
-package com.exemplo.mvc.model;
+package com.exemplo.odonto.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

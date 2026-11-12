@@ -1,6 +1,6 @@
 package com.exemplo.mvc.repository;
 
-import com.exemplo.mvc.model.Observacao;
+import com.exemplo.odonto.model.Observacao;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 @org.springframework.stereotype.Repository

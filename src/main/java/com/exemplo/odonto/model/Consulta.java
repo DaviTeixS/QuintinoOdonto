@@ -1,4 +1,4 @@
-package com.exemplo.mvc.model;
+package com.exemplo.odonto.model;
 
 import java.time.LocalDateTime;
 
