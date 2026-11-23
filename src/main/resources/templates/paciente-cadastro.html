@@ -18,7 +18,7 @@
     </dl>
 
     <div class="dados__acoes">
-      <a class="botao botao--primario" th:href="@{/pacientes/{id}/editar(id=${paciente.id()})}">Editar dados</a>
+      <a class="botao botao--primario" th:if="${usuario != null and usuario.consultorio}" th:href="@{/pacientes/{id}/editar(id=${paciente.id()})}">Editar dados</a>
     </div>
   </main>
 

@@ -25,6 +25,9 @@
         Observações
       </a>
     </nav>
+    <div class="centro" th:if="${usuario != null and usuario.consultorio}">
+      <a class="botao botao--primario" th:href="@{/consultas/nova(pacienteId=${paciente.id()})}">Agendar consulta</a>
+    </div>
   </main>
 
   <th:block th:replace="~{fragments/layout :: scripts}"></th:block>

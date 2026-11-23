@@ -22,10 +22,43 @@
 
   <link rel="stylesheet" th:href="@{/css/global.css}">
   <link rel="stylesheet" th:href="@{/css/componentes.css}">
-  <link rel="stylesheet" th:if="${css != null}" th:href="@{'/css/' + ${css} + '.css'}">
+  <!-- css: nomes de arquivos em /css separados por vírgula (ex.: 'inicio,agenda') ou null -->
+  <th:block th:if="${css != null}">
+    <link rel="stylesheet" th:each="c : ${#strings.arraySplit(css, ',')}" th:href="@{'/css/' + ${c} + '.css'}">
+  </th:block>
 </head>
 
 <body>
+
+<!-- Menu lateral (gaveta). Na tela Agendas aparecem também as visões Dia / Semana / Mês. -->
+<th:block th:fragment="menuLateral">
+  <div class="menu-overlay" id="menuOverlay"></div>
+  <nav class="menu-lateral" id="menuLateral" aria-label="Menu principal">
+    <button type="button" class="icone-btn menu-lateral__fechar" id="menuFechar" aria-label="Fechar menu">
+      <th:block th:replace="~{fragments/icones :: voltar}"></th:block>
+    </button>
+
+    <ul class="menu-lateral__lista menu-lateral__lista--visoes" th:if="${visoes != null}" aria-label="Visões da agenda">
+      <li th:each="v : ${visoes}">
+        <a th:href="@{/agenda(visao=${v},data=${dataIso},dentistaId=${dentistaId})}" th:data-visao="${v}"
+           th:aria-current="${v == visao} ? 'page'"
+           th:text="${v == 'dia'} ? 'Dia' : (${v == 'semana'} ? 'Semana' : 'Mês')">Dia</a>
+      </li>
+    </ul>
+
+    <ul class="menu-lateral__lista" th:classappend="${visoes != null} ? 'menu-lateral__lista--secundaria'">
+      <li><a th:href="@{/pacientes}" data-rota="/pacientes">Pacientes</a></li>
+      <li th:if="${usuario != null and usuario.consultorio}"><a th:href="@{/colaboradores}" data-rota="/colaboradores">Colaborador</a></li>
+      <li><a th:href="@{/agenda}" data-rota="/agenda">Agendas</a></li>
+      <li><a th:href="@{/pacientes}">Fichas</a></li>
+      <li th:if="${usuario != null and usuario.consultorio}"><a th:href="@{/procedimentos}" data-rota="/procedimentos">Procedimentos</a></li>
+    </ul>
+    <form class="menu-lateral__sair" th:action="@{/logout}" method="post">
+      <p class="menu-lateral__usuario" th:if="${usuario != null}" th:text="${usuario.nome}">Usuário</p>
+      <button type="submit" class="botao-sair">Sair</button>
+    </form>
+  </nav>
+</th:block>
 
 <!-- Barra do topo + menu lateral (hambúrguer). Telas principais: início, pacientes, colaboradores, procedimentos. -->
 <th:block th:fragment="topo(titulo)">
@@ -37,24 +70,37 @@
     <h1 class="topo__titulo" th:text="${titulo}">Quintino Odonto</h1>
     <span></span>
   </header>
+  <th:block th:replace="~{fragments/layout :: menuLateral}"></th:block>
+</th:block>
 
-  <div class="menu-overlay" id="menuOverlay"></div>
-  <nav class="menu-lateral" id="menuLateral" aria-label="Menu principal">
-    <button type="button" class="icone-btn menu-lateral__fechar" id="menuFechar" aria-label="Fechar menu">
-      <th:block th:replace="~{fragments/icones :: voltar}"></th:block>
+<!--
+  Barra da tela Agendas. Consultório: barra azul "Agendas" + lista "Todos os dentistas" (Figma "agenda").
+  Dentista: barra creme "Quintino Odonto" (Figma "agenda dia").
+-->
+<th:block th:fragment="topoAgenda">
+  <header class="topo topo--agenda" th:classappend="${usuario != null and usuario.consultorio} ? 'topo--ficha'">
+    <button type="button" class="icone-btn" id="menuBtn" aria-label="Abrir menu"
+            aria-controls="menuLateral" aria-expanded="false">
+      <th:block th:replace="~{fragments/icones :: menu}"></th:block>
     </button>
-    <ul class="menu-lateral__lista">
-      <li><a th:href="@{/pacientes}" data-rota="/pacientes">Pacientes</a></li>
-      <li th:if="${usuario != null and usuario.consultorio}"><a th:href="@{/colaboradores}" data-rota="/colaboradores">Colaborador</a></li>
-      <li><a th:href="@{/inicio}" data-rota="/inicio">Agendas</a></li>
-      <li><a th:href="@{/pacientes}">Fichas</a></li>
-      <li th:if="${usuario != null and usuario.consultorio}"><a th:href="@{/procedimentos}" data-rota="/procedimentos">Procedimentos</a></li>
-    </ul>
-    <form class="menu-lateral__sair" th:action="@{/logout}" method="post">
-      <p class="menu-lateral__usuario" th:if="${usuario != null}" th:text="${usuario.nome}">Usuário</p>
-      <button type="submit" class="botao-sair">Sair</button>
-    </form>
-  </nav>
+    <h1 class="topo__titulo" th:text="${usuario != null and usuario.consultorio} ? 'Agendas' : 'Quintino Odonto'">Agendas</h1>
+    <div class="topo__direita">
+      <details class="filtro" id="filtroDentista" th:if="${listaDentistas != null}">
+        <summary>
+          <span th:text="${dentistaNome != null} ? ${dentistaNome} : 'Todos os dentistas'">Todos os dentistas</span>
+          <th:block th:replace="~{fragments/icones :: filtro}"></th:block>
+        </summary>
+        <ul class="filtro__lista">
+          <li><a th:href="@{/agenda(visao=${visao},data=${dataIso})}" data-dentista="">Todos os dentistas</a></li>
+          <li th:each="d : ${listaDentistas}">
+            <a th:href="@{/agenda(visao=${visao},data=${dataIso},dentistaId=${d.id()})}" th:data-dentista="${d.id()}"
+               th:text="${d.titulo()}">Dentista</a>
+          </li>
+        </ul>
+      </details>
+    </div>
+  </header>
+  <th:block th:replace="~{fragments/layout :: menuLateral}"></th:block>
 </th:block>
 
 <!-- Barra com seta de voltar (telas de formulário e de ficha). -->

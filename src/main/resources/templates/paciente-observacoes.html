@@ -9,7 +9,7 @@
     <th:block th:replace="~{fragments/layout :: mensagens}"></th:block>
     <h2 class="subtitulo"><th:block th:replace="~{fragments/icones :: livroPequeno}"></th:block>Observações</h2>
 
-    <a class="botao-novo" th:href="@{/pacientes/{id}/observacoes/nova(id=${paciente.id()})}">+Nova observação</a>
+    <a class="botao-novo" th:if="${usuario != null and usuario.dentista}" th:href="@{/pacientes/{id}/observacoes/nova(id=${paciente.id()})}">+Nova observação</a>
 
     <div class="notas" th:if="${!#lists.isEmpty(observacoes)}">
       <article class="nota" th:each="o : ${observacoes}">

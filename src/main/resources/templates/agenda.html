@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Agendas', 'inicio,agenda')}"></head>
+<body class="app" th:data-base="@{/}">
+
+  <!-- Barra "Agendas" + lista "Todos os dentistas" (consultório) e gaveta com Dia / Semana / Mês -->
+  <th:block th:replace="~{fragments/layout :: topoAgenda}"></th:block>
+
+  <main class="conteudo conteudo--inicio">
+    <th:block th:replace="~{fragments/layout :: mensagens}"></th:block>
+
+    <!-- ===== Visão DIA (Figma: "agenda dia") ===== -->
+    <section id="visaoDia" class="visao-dia" th:if="${visao == 'dia'}"
+             th:data-api="@{/api/agenda/dia}" th:data-consulta-base="@{/consultas}"
+             th:data-data="${dataIso}" th:data-dentista-id="${dentistaId}"
+             th:data-perfil="${usuario != null and usuario.dentista} ? 'dentista' : 'consultorio'">
+      <div class="navegacao">
+        <button type="button" class="icone-btn" id="diaAnterior" aria-label="Dia anterior">
+          <th:block th:replace="~{fragments/icones :: setaEsq}"></th:block>
+        </button>
+        <h2 class="navegacao__titulo" id="diaCabecalho" aria-live="polite">&nbsp;</h2>
+        <button type="button" class="icone-btn" id="diaProximo" aria-label="Próximo dia">
+          <th:block th:replace="~{fragments/icones :: setaDir}"></th:block>
+        </button>
+      </div>
+      <p class="navegacao__total" id="diaTotal" aria-live="polite"></p>
+      <div class="lista-dia" id="diaConsultas"></div>
+      <div class="centro" th:if="${usuario != null and usuario.consultorio}">
+        <a class="botao botao--primario" id="btnAgendar" th:href="@{/consultas/nova}">Agendar consulta</a>
+      </div>
+    </section>
+
+    <!-- ===== Visão SEMANA (Figma: "agenda lista", com busca por paciente) ===== -->
+    <section id="visaoSemana" class="visao-semana" th:if="${visao == 'semana'}"
+             th:data-api="@{/api/agenda/semana}" th:data-consulta-base="@{/consultas}"
+             th:data-data="${dataIso}" th:data-dentista-id="${dentistaId}">
+      <form class="busca busca--curta" role="search" onsubmit="return false">
+        <label class="visualmente-oculto" for="buscaPaciente">Buscar paciente na semana</label>
+        <input id="buscaPaciente" type="search" placeholder="Informe o nome do paciente" autocomplete="off">
+      </form>
+      <div class="navegacao">
+        <button type="button" class="icone-btn" id="semanaAnterior" aria-label="Semana anterior">
+          <th:block th:replace="~{fragments/icones :: setaEsq}"></th:block>
+        </button>
+        <h2 class="navegacao__titulo" id="semanaCabecalho" aria-live="polite">&nbsp;</h2>
+        <button type="button" class="icone-btn" id="semanaProxima" aria-label="Próxima semana">
+          <th:block th:replace="~{fragments/icones :: setaDir}"></th:block>
+        </button>
+      </div>
+      <div id="semanaConsultas" aria-live="polite"></div>
+      <div class="centro" th:if="${usuario != null and usuario.consultorio}">
+        <a class="botao botao--primario" id="btnAgendar" th:href="@{/consultas/nova}">Agendar consulta</a>
+      </div>
+    </section>
+
+    <!-- ===== Visão MÊS (Figma: "agenda" / "agenda mês") ===== -->
+    <th:block th:if="${visao == 'mes'}">
+      <th:block th:replace="~{fragments/calendario :: calendarioMes(true)}"></th:block>
+    </th:block>
+  </main>
+
+  <th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+  <script th:if="${visao == 'mes'}" th:src="@{/js/calendario.js}" defer></script>
+  <script th:if="${visao != 'mes'}" th:src="@{/js/agenda.js}" defer></script>
+  <script th:src="@{/js/agenda-menu.js}" defer></script>
+</body>
+</html>

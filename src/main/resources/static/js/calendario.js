@@ -2,6 +2,9 @@
    CALENDÁRIO DA TELA INICIAL
    - GET {data-api-mes}?ano=2026&mes=11   -> [{ dia, total }]  (dias com consulta)
    - GET {data-api-dia}?data=2026-11-04   -> [ConsultaDTO]     (consultas do dia)
+   Ambos aceitam &dentistaId= (agenda de um dentista; o dentista logado já vê só a própria).
+   Atributos opcionais de #calendario: data-dentista-id, data-data (dia inicial, ISO),
+   data-sincroniza (grava o dia escolhido na URL), data-perfil (dentista | consultorio).
    ===================================================================== */
 (function () {
   'use strict';
@@ -12,6 +15,13 @@
   var apiMes = raiz.getAttribute('data-api-mes');
   var apiDia = raiz.getAttribute('data-api-dia');
   var fichaBase = raiz.getAttribute('data-ficha-base');
+  var consultaBase = raiz.getAttribute('data-consulta-base') || fichaBase;
+  var dentistaId = raiz.getAttribute('data-dentista-id') || '';
+  var perfil = raiz.getAttribute('data-perfil') || 'consultorio';
+  var sincroniza = raiz.getAttribute('data-sincroniza') === 'true';
+  var dataInicial = raiz.getAttribute('data-data') || '';
+  var btnAgendar = document.getElementById('btnAgendar');
+  var agendarBase = btnAgendar ? btnAgendar.getAttribute('href') : '';
   var LIMITE_INICIAL = 4;
 
   var MESES = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
@@ -26,6 +36,11 @@
   var hoje = new Date();
   var exibido = new Date(hoje.getFullYear(), hoje.getMonth(), 1);
   var selecionado = new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate());
+  var partesIni = /^(\d{4})-(\d{2})-(\d{2})$/.exec(dataInicial);
+  if (partesIni) {
+    selecionado = new Date(+partesIni[1], +partesIni[2] - 1, +partesIni[3]);
+    exibido = new Date(selecionado.getFullYear(), selecionado.getMonth(), 1);
+  }
   var diasComConsulta = {};
   var consultasDia = [];
   var expandido = false;
@@ -33,6 +48,7 @@
 
   function pad(n) { return String(n).padStart(2, '0'); }
   function iso(d) { return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()); }
+  function paramDentista() { return dentistaId ? '&dentistaId=' + encodeURIComponent(dentistaId) : ''; }
   function mesmoDia(a, b) { return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate(); }
 
   function el(tag, classe, texto) {
@@ -85,7 +101,7 @@
     var meu = ++pedidoMes;
     diasComConsulta = {};
     desenharGrade();
-    buscarJson(apiMes + '?ano=' + exibido.getFullYear() + '&mes=' + (exibido.getMonth() + 1))
+    buscarJson(apiMes + '?ano=' + exibido.getFullYear() + '&mes=' + (exibido.getMonth() + 1) + paramDentista())
       .then(function (dias) {
         if (meu !== pedidoMes) return;
         dias.forEach(function (d) { diasComConsulta[d.dia] = d.total; });
@@ -113,11 +129,13 @@
         card.appendChild(el('div', 'consulta__hora', String(c.hora).slice(0, 5)));
         var dados = el('div', 'consulta__dados');
         dados.appendChild(el('p', 'consulta__paciente', c.pacienteNome));
-        dados.appendChild(el('p', 'consulta__sub', c.dentistaNome + (c.procedimento ? ' • ' + c.procedimento : '')));
+        // Figma: o dentista vê o procedimento; o consultório vê o dentista (ou o procedimento, se filtrou um dentista)
+        var sub = (perfil === 'dentista' || dentistaId) ? c.procedimento : c.dentistaNome;
+        dados.appendChild(el('p', 'consulta__sub', sub || ''));
         card.appendChild(dados);
         var mais = el('a', 'consulta__mais');
-        mais.href = fichaBase + '/' + c.pacienteId;
-        mais.setAttribute('aria-label', 'Abrir ficha de ' + c.pacienteNome);
+        mais.href = consultaBase + '/' + c.id;
+        mais.setAttribute('aria-label', 'Abrir consulta de ' + c.pacienteNome);
         mais.innerHTML = ICONE_MAIS;
         card.appendChild(mais);
         return card;
@@ -127,13 +145,22 @@
     verTodos.textContent = expandido ? 'Mostrar menos' : 'Visualizar todos';
   }
 
+  function sincronizarUrl() {
+    if (btnAgendar) btnAgendar.setAttribute('href', agendarBase + '?data=' + iso(selecionado));
+    if (!sincroniza || !window.history || !history.replaceState) return;
+    var q = new URLSearchParams(location.search);
+    q.set('data', iso(selecionado));
+    history.replaceState(null, '', location.pathname + '?' + q.toString());
+  }
+
   function carregarDia() {
     var meu = ++pedidoDia;
+    sincronizarUrl();
     expandido = false;
     tituloDoDia();
     diaLista.replaceChildren(el('p', 'vazio', 'Carregando...'));
     verTodos.hidden = true;
-    buscarJson(apiDia + '?data=' + iso(selecionado))
+    buscarJson(apiDia + '?data=' + iso(selecionado) + paramDentista())
       .then(function (consultas) { if (meu === pedidoDia) { consultasDia = consultas; desenharConsultas(); } })
       .catch(function () {
         if (meu === pedidoDia) diaLista.replaceChildren(el('p', 'vazio', 'Não foi possível carregar as consultas.'));

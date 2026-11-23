@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Consulta', 'agenda')}"></head>
+<body class="app" th:data-base="@{/}">
+
+  <header th:replace="~{fragments/layout :: topoVoltar('Consulta', '/agenda?visao=dia&amp;data=' + ${consulta.data()}, '')}"></header>
+
+  <main class="conteudo conteudo--consulta">
+    <th:block th:replace="~{fragments/layout :: mensagens}"></th:block>
+
+    <!-- Figma: "detalhes consulta" -->
+    <section class="ficha-consulta" aria-label="Dados da consulta">
+      <dl>
+        <div class="ficha-consulta__linha"><dt>Paciente</dt><dd th:text="${consulta.pacienteNome()}">Paciente</dd></div>
+        <div class="ficha-consulta__linha"><dt>Dentista</dt><dd th:text="${consulta.dentistaNome()}">Dentista</dd></div>
+        <div class="ficha-consulta__linha"><dt>Procedimento</dt><dd th:text="${consulta.procedimento()}">Procedimento</dd></div>
+        <div class="ficha-consulta__linha"><dt>Data</dt><dd th:text="${consulta.dataBr()}">00/00/0000</dd></div>
+        <div class="ficha-consulta__linha"><dt>Horário</dt><dd th:text="${consulta.horaFmt()} + ' (' + ${@fmt.duracaoCurta(consulta.duracaoMinutos())} + ')'">00:00</dd></div>
+        <div class="ficha-consulta__linha"><dt>Status</dt><dd>
+          <span class="selo" th:classappend="'selo--' + ${@fmt.statusClasse(consulta.status())}" th:text="${@fmt.status(consulta.status())}">Agendado</span>
+        </dd></div>
+        <div class="ficha-consulta__linha" th:if="${!#strings.isEmpty(consulta.dente())}"><dt>Dente</dt><dd th:text="${consulta.dente()}">26</dd></div>
+        <div class="ficha-consulta__linha" th:if="${!#strings.isEmpty(consulta.sintomas())}"><dt>Sintomas</dt><dd th:text="${consulta.sintomas()}">Sintomas</dd></div>
+        <div class="ficha-consulta__linha" th:if="${!#strings.isEmpty(consulta.motivoCancelamento())}"><dt>Motivo do cancelamento</dt><dd th:text="${consulta.motivoCancelamento()}">Motivo</dd></div>
+      </dl>
+    </section>
+
+    <a class="link-sublinhado" th:href="@{/pacientes/{id}(id=${consulta.pacienteId()})}">Ver ficha do paciente</a>
+
+    <!-- Reagendar / Alterar / Cancelar: só o consultório, e só em consultas agendadas -->
+    <div class="acoes-consulta" th:if="${consulta.agendada() and usuario != null and usuario.consultorio}">
+      <a class="botao botao--primario" th:href="@{/consultas/{id}/reagendar(id=${consulta.id()})}">Reagendar</a>
+      <a class="botao botao--secundario" th:href="@{/consultas/{id}/editar(id=${consulta.id()})}">Alterar</a>
+      <button type="button" class="botao botao--secundario" id="btnCancelar">Cancelar</button>
+    </div>
+
+    <form class="concluir" th:if="${consulta.agendada()}"
+          th:action="@{/consultas/{id}/concluir(id=${consulta.id()})}" method="post" data-envio-unico>
+      <button type="submit" class="botao-texto">Marcar como realizada</button>
+    </form>
+
+    <!-- Figma: "Confirmar cancelamento" -->
+    <dialog class="modal" id="modalCancelar" aria-labelledby="modalTitulo"
+            th:if="${consulta.agendada() and usuario != null and usuario.consultorio}">
+      <form class="modal__corpo" method="post" th:action="@{/consultas/{id}/cancelar(id=${consulta.id()})}">
+        <h2 id="modalTitulo">Cancelar consulta?</h2>
+        <p class="modal__texto"
+           th:text="'A consulta de ' + ${consulta.pacienteNome()} + ', em ' + ${@fmt.diaMes(consulta.data())} + ' às ' + ${consulta.horaFmt()} + ', será cancelada e o horário ficará livre na agenda da dentista.'">
+          A consulta será cancelada.</p>
+        <label class="visualmente-oculto" for="motivo">Motivo do cancelamento (opcional)</label>
+        <textarea class="modal__motivo" id="motivo" name="motivo" rows="2" maxlength="500"
+                  placeholder="Motivo do cancelamento (opcional)"></textarea>
+        <div class="modal__acoes">
+          <button type="submit" class="botao botao--primario">Sim, cancelar</button>
+          <button type="button" class="botao botao--secundario" data-fechar>Voltar</button>
+        </div>
+      </form>
+    </dialog>
+  </main>
+
+  <th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+  <script th:src="@{/js/consulta-detalhe.js}" defer></script>
+</body>
+</html>

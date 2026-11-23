@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head(${tituloPagina}, 'agenda')}"></head>
+<body class="app" th:data-base="@{/}">
+  <header th:replace="~{fragments/layout :: topoVoltar(${tituloPagina}, ${voltar}, '')}"></header>
+  <main class="conteudo">
+    <th:block th:replace="~{fragments/layout :: mensagens}"></th:block>
+    <!-- Os horários livres são carregados por /js/agendamento.js a partir de /api/horarios-livres -->
+    <form class="form form--unica" id="formConsulta" th:action="@{${acao}}" method="post" data-envio-unico
+          th:data-api-horarios="@{/api/horarios-livres}" th:data-consulta="${consultaId}"
+          th:data-hora="${v['hora']}">
+      <div class="campo">
+        <label for="pacienteId">Paciente</label>
+        <select id="pacienteId" name="pacienteId" required>
+          <option value="" disabled th:selected="${v['pacienteId'] == null or v['pacienteId'] == ''}">Selecione o paciente</option>
+          <option th:each="p : ${listaPacientes}" th:value="${p.id()}" th:text="${p.titulo()}"
+                  th:selected="${v['pacienteId'] == p.id().toString()}">Paciente</option>
+        </select>
+        <p class="campo__dica">Paciente novo? <a class="link-sublinhado" th:href="@{/pacientes/novo}">Cadastre primeiro</a>.</p>
+      </div>
+      <div class="campo">
+        <label for="dentistaId">Dentista</label>
+        <select id="dentistaId" name="dentistaId" required>
+          <option value="" disabled th:selected="${v['dentistaId'] == null or v['dentistaId'] == ''}">Selecione a dentista</option>
+          <option th:each="d : ${listaDentistas}" th:value="${d.id()}" th:text="${d.titulo()}"
+                  th:selected="${v['dentistaId'] == d.id().toString()}">Dentista</option>
+        </select>
+      </div>
+      <div class="campo">
+        <label for="procedimentoId">Procedimento</label>
+        <select id="procedimentoId" name="procedimentoId" required>
+          <option value="" disabled th:selected="${v['procedimentoId'] == null or v['procedimentoId'] == ''}">Selecione o procedimento</option>
+          <option th:each="p : ${listaProcedimentos}" th:value="${p.id()}"
+                  th:text="${p.nome()} + ' (' + ${@fmt.duracaoCurta(p.duracaoMinutos())} + ')'"
+                  th:attr="data-dentistas=${#strings.listJoin(p.dentistaIds(), ',')}"
+                  th:selected="${v['procedimentoId'] == p.id().toString()}">Procedimento</option>
+        </select>
+      </div>
+      <div class="campo">
+        <label for="data">Data</label>
+        <input id="data" name="data" type="date" required th:min="${hoje}" th:value="${v['data']}">
+      </div>
+      <div class="campo">
+        <label for="hora">Horário</label>
+        <select id="hora" name="hora" required>
+          <option value="">Selecione o horário</option>
+        </select>
+        <p class="campo__dica" id="horaDica" aria-live="polite">Selecione um horário livre para esta dentista.</p>
+      </div>
+      <div class="campo">
+        <label for="dente">Dente (opcional)</label>
+        <input id="dente" name="dente" type="text" maxlength="10" placeholder="Ex.: 26" th:value="${v['dente']}">
+      </div>
+      <div class="campo campo--texto-grande">
+        <label for="sintomas">Sintomas informados (opcional)</label>
+        <textarea id="sintomas" name="sintomas" rows="3" maxlength="1000" th:text="${v['sintomas']}"></textarea>
+      </div>
+      <div class="form-acoes">
+        <button type="submit" class="botao botao--primario" th:text="${consultaId == null} ? 'Agendar' : 'Salvar'">Agendar</button>
+        <a class="botao botao--secundario" th:href="@{${voltar}}">Cancelar</a>
+      </div>
+    </form>
+  </main>
+  <th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+  <script th:src="@{/js/agendamento.js}" defer></script>
+</body>
+</html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Horários de atendimento', 'agenda')}"></head>
+<body class="app" th:data-base="@{/}">
+
+  <header th:replace="~{fragments/layout :: topoVoltar('Horários de atendimento', ${voltar}, '')}"></header>
+
+  <main class="conteudo">
+    <th:block th:replace="~{fragments/layout :: mensagens}"></th:block>
+
+    <!-- Figma: "horários do dentista". horarios.js monta/remove os períodos e envia tudo em "Salvar horários" -->
+    <form id="formHorarios" class="horarios" method="post"
+          th:action="@{/colaboradores/{id}/horarios(id=${colaborador.id()})}" data-envio-unico>
+
+      <div class="seletor-dentista">
+        <label class="visualmente-oculto" for="dentistaSel">Dentista</label>
+        <select id="dentistaSel" th:data-base="@{/colaboradores}">
+          <option th:each="d : ${listaDentistas}" th:value="${d.id()}" th:text="${d.titulo()}"
+                  th:selected="${d.id().equals(colaborador.id())}">Dentista</option>
+        </select>
+      </div>
+
+      <div class="semana">
+        <section class="dia-linha" th:each="l : ${linhas}" th:data-dia="${l.chave()}">
+          <h2 class="dia-linha__nome" th:text="${l.nome()}">Segunda</h2>
+          <div class="dia-linha__periodos">
+            <span class="periodo" th:each="p : ${l.periodos()}"
+                  th:data-valor="${l.chave() + '|' + p.inicioFmt() + '|' + p.fimFmt()}">
+              <span class="periodo__texto" th:text="${p.inicioFmt() + ' – ' + p.fimFmt()}">08:00 – 12:00</span>
+              <button type="button" class="periodo__remover"
+                      th:aria-label="'Remover período ' + ${p.inicioFmt()} + ' às ' + ${p.fimFmt()}">×</button>
+            </span>
+            <span class="dia-linha__vazio" th:hidden="${!#lists.isEmpty(l.periodos())}">Sem atendimento</span>
+            <button type="button" class="botao-periodo" data-adicionar>+ Período</button>
+          </div>
+        </section>
+      </div>
+
+      <div id="periodosSaida"></div>
+
+      <div class="form-acoes">
+        <button type="submit" class="botao botao--primario">Salvar horários</button>
+        <a class="botao botao--secundario" th:href="@{${voltar}}">Cancelar</a>
+      </div>
+    </form>
+  </main>
+
+  <th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+  <script th:src="@{/js/horarios.js}" defer></script>
+</body>
+</html>

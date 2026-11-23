@@ -21,6 +21,7 @@
   var api = lista.getAttribute('data-api');
   var base = lista.getAttribute('data-base');
   var principal = lista.getAttribute('data-principal') === 'true';
+  var podeEditar = lista.getAttribute('data-editar') !== 'false';
   var msgVazio = lista.getAttribute('data-vazio') || 'Nenhum resultado encontrado.';
   var contador = 0; // descarta respostas antigas se o usuário digitar rápido
 
@@ -48,10 +49,14 @@
     conteudo.appendChild(textos);
     art.appendChild(conteudo);
 
-    var editar = el('a', 'item-lista__acao', 'Editar');
-    editar.href = base + '/' + item.id + '/editar';
-    editar.setAttribute('aria-label', 'Editar ' + item.titulo);
-    art.appendChild(editar);
+    if (podeEditar) {
+      var editar = el('a', 'item-lista__acao', 'Editar');
+      editar.href = base + '/' + item.id + '/editar';
+      editar.setAttribute('aria-label', 'Editar ' + item.titulo);
+      art.appendChild(editar);
+    } else {
+      art.classList.add('item-lista--sem-acao');
+    }
     return art;
   }
 

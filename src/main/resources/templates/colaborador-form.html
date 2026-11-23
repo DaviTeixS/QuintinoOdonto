@@ -46,7 +46,7 @@
         <a class="botao botao--secundario" th:href="@{/colaboradores}">Cancelar</a>
       </div>
 
-      <a class="link-sublinhado" th:href="@{/colaboradores/{id}/horarios(id=${colaboradorId})}">Gerenciar horários de atendimento</a>
+      <a class="link-sublinhado" th:if="${v['funcao'] == 'DENTISTA'}" th:href="@{/colaboradores/{id}/horarios(id=${colaboradorId})}">Gerenciar horários de atendimento</a>
     </form>
   </main>
 

@@ -37,3 +37,8 @@ build/
 
 ### Mac OS ###
 .DS_Store
+### Quintino Odonto ###
+target/
+.idea/
+*.iml
+data/

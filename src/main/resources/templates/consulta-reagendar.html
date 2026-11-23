@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Reagendar consulta', 'agenda')}"></head>
+<body class="app" th:data-base="@{/}">
+
+  <header th:replace="~{fragments/layout :: topoVoltar('Reagendar consulta', ${voltar}, '')}"></header>
+
+  <main class="conteudo conteudo--consulta">
+    <th:block th:replace="~{fragments/layout :: mensagens}"></th:block>
+
+    <!-- Figma: "reagendar consulta". Os horários livres vêm de /api/horarios-livres (reagendar.js) -->
+    <form id="formReagendar" class="reagendar" method="post"
+          th:action="@{/consultas/{id}/reagendar(id=${consulta.id()})}" data-envio-unico
+          th:data-api-horarios="@{/api/horarios-livres}" th:data-dentista="${consulta.dentistaId()}"
+          th:data-procedimento="${consulta.procedimentoId()}" th:data-consulta="${consulta.id()}"
+          th:data-hora="${horaEscolhida}">
+
+      <div class="consulta-atual">
+        <p class="consulta-atual__rotulo">Consulta atual</p>
+        <div class="consulta-atual__linha">
+          <strong th:text="${consulta.pacienteNome()} + ' – ' + ${consulta.procedimento()}">Paciente – Procedimento</strong>
+          <span th:text="${consulta.quandoCurto()}">Quinta, 03/09 – 10:00</span>
+        </div>
+      </div>
+
+      <div class="campo">
+        <label for="data">Nova data</label>
+        <input id="data" name="data" type="date" required th:min="${hoje}" th:value="${dataNova}">
+      </div>
+
+      <div class="campo">
+        <span class="campo__rotulo" id="horariosRotulo">Horários disponíveis</span>
+        <div class="horarios-grade" id="horariosGrade" role="radiogroup" aria-labelledby="horariosRotulo"></div>
+        <input type="hidden" id="hora" name="hora" th:value="${horaEscolhida}">
+        <p class="campo__dica" id="horariosDica">Somente horários livres da dentista são exibidos.</p>
+      </div>
+
+      <div class="form-acoes">
+        <button type="submit" class="botao botao--primario" id="btnConfirmar" disabled>Confirmar reagendamento</button>
+        <a class="botao botao--secundario" th:href="@{${voltar}}">Cancelar</a>
+      </div>
+    </form>
+  </main>
+
+  <th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+  <script th:src="@{/js/reagendar.js}" defer></script>
+</body>
+</html>

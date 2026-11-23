@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<!--
+  Calendário do mês + consultas do dia (usado na tela inicial e na visão "Mês" da agenda).
+  Montado por /js/calendario.js com dados de /api/agenda/mes e /api/agenda/dia.
+  Variáveis opcionais do modelo: dentistaId (filtra a agenda de um dentista) e dataIso (dia inicial).
+  sincronizaUrl = true grava o dia escolhido na URL (?data=...) para as outras visões da agenda.
+-->
+<th:block th:fragment="calendarioMes(sincronizaUrl)">
+  <section id="calendario" class="calendario" aria-label="Calendário de consultas"
+           th:data-api-mes="@{/api/agenda/mes}" th:data-api-dia="@{/api/agenda/dia}"
+           th:data-ficha-base="@{/pacientes}" th:data-consulta-base="@{/consultas}"
+           th:data-dentista-id="${dentistaId}" th:data-data="${dataIso}"
+           th:data-sincroniza="${sincronizaUrl}"
+           th:data-perfil="${usuario != null and usuario.dentista} ? 'dentista' : 'consultorio'">
+    <div class="calendario__cab">
+      <button type="button" class="icone-btn" id="calAnterior" aria-label="Mês anterior">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 5-7 7 7 7"/></svg>
+      </button>
+      <h2 class="calendario__titulo" id="calTitulo" aria-live="polite">&nbsp;</h2>
+      <button type="button" class="icone-btn" id="calProximo" aria-label="Próximo mês">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg>
+      </button>
+    </div>
+    <div class="calendario__semana" aria-hidden="true">
+      <span>dom</span><span>seg</span><span>ter</span><span>qua</span><span>qui</span><span>sex</span><span>sab</span>
+    </div>
+    <div class="calendario__grade" id="calGrade"></div>
+  </section>
+
+  <section class="agenda-dia" aria-live="polite">
+    <h2 class="agenda-dia__titulo" id="diaTitulo"></h2>
+    <div class="consultas-dia" id="diaLista"></div>
+    <div class="centro">
+      <button type="button" class="botao botao--suave" id="verTodos" hidden>Visualizar todos</button>
+    </div>
+    <div class="centro" th:if="${usuario != null and usuario.consultorio}">
+      <a class="botao botao--primario" id="btnAgendar" th:href="@{/consultas/nova}">Agendar consulta</a>
+    </div>
+  </section>
+</th:block>
+
+</body>
+</html>

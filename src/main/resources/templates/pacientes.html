@@ -19,9 +19,10 @@
     <!-- Itens montados por /js/busca-lista.js a partir de /api/pacientes -->
     <section id="lista" class="lista" aria-live="polite"
              th:data-api="@{/api/pacientes}" th:data-base="@{/pacientes}"
+             th:data-editar="${usuario != null and usuario.consultorio}"
              data-principal="true" data-vazio="Nenhum paciente encontrado."></section>
 
-    <a class="botao-novo" th:href="@{/pacientes/novo}">+Novo Paciente</a>
+    <a class="botao-novo" th:if="${usuario != null and usuario.consultorio}" th:href="@{/pacientes/novo}">+Novo Paciente</a>
   </main>
 
   <th:block th:replace="~{fragments/layout :: scripts}"></th:block>
