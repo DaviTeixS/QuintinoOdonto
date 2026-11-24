@@ -16,10 +16,14 @@ import org.springframework.web.util.UrlPathHelper;
 @Component
 public class AutenticacaoInterceptor implements HandlerInterceptor {
 
+    /** Telas e APIs exclusivas do administrativo (colaboradores). */
+    private static final Pattern SO_ADMIN = Pattern.compile(
+            "^/colaboradores(/.*)?$|^/api/colaboradores(/.*)?$");
+
     /** Telas e APIs exclusivas do consultório, em qualquer método HTTP. */
     private static final Pattern SO_CONSULTORIO = Pattern.compile(
-            "^/(colaboradores|procedimentos)(/.*)?$"
-                    + "|^/api/(colaboradores|procedimentos|dentistas|horarios-livres)(/.*)?$"
+            "^/procedimentos(/.*)?$"
+                    + "|^/api/(procedimentos|dentistas|horarios-livres)(/.*)?$"
                     + "|^/consultas/nova$"
                     + "|^/consultas/\\d+/(editar|cancelar|reagendar)$"
                     + "|^/pacientes/novo$"
@@ -58,7 +62,11 @@ public class AutenticacaoInterceptor implements HandlerInterceptor {
         boolean soDentista = SO_DENTISTA.matcher(caminho).matches()
                 || (post && POST_SO_DENTISTA.matcher(caminho).matches());
 
-        boolean negado = (soConsultorio && !usuario.isConsultorio()) || (soDentista && !usuario.isDentista());
+        boolean soAdmin = SO_ADMIN.matcher(caminho).matches();
+
+        boolean negado = (soAdmin && !usuario.isAdministrativo())
+                || (soConsultorio && !usuario.isConsultorio())
+                || (soDentista && !usuario.isDentista());
         if (negado) {
             if (api) {
                 response.sendError(HttpServletResponse.SC_FORBIDDEN);

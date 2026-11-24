@@ -33,6 +33,10 @@ public class SessaoUsuario {
      * "Consultório" = administrativo e recepção: cadastram pacientes, colaboradores, procedimentos
      * e horários e fazem os agendamentos. Usado nos templates (${usuario.consultorio}).
      */
+
+    public boolean isAdministrativo(){return perfil==Perfil.ADMINISTRATIVO;
+    }
+
     public boolean isConsultorio() {
         return perfil == Perfil.ADMINISTRATIVO || perfil == Perfil.RECEPCAO;
     }

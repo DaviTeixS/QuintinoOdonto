@@ -48,8 +48,8 @@
 
     <ul class="menu-lateral__lista" th:classappend="${visoes != null} ? 'menu-lateral__lista--secundaria'">
       <li><a th:href="@{/pacientes}" data-rota="/pacientes">Pacientes</a></li>
-      <li th:if="${usuario != null and usuario.consultorio}"><a th:href="@{/colaboradores}" data-rota="/colaboradores">Colaborador</a></li>
-      <li><a th:href="@{/agenda}" data-rota="/agenda">Agendas</a></li>
+      <li th:if="${usuario != null and usuario.administrativo}"><a th:href="@{/colaboradores}" data-rota="/colaboradores">Colaborador</a></li>
+       <li><a th:href="@{/agenda}" data-rota="/agenda">Agendas</a></li>
       <li><a th:href="@{/pacientes}">Fichas</a></li>
       <li th:if="${usuario != null and usuario.consultorio}"><a th:href="@{/procedimentos}" data-rota="/procedimentos">Procedimentos</a></li>
     </ul>
